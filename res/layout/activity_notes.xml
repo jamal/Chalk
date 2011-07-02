@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout style="@style/TitleBar">
+        <TextView 
+        	style="@style/TitleBarText"
+        	android:text="@string/app_name" />
+        	
+        <ProgressBar 
+            android:id="@+id/title_loading"
+            android:layout_marginTop="8dip"
+            android:layout_marginRight="10dip" 
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:visibility="invisible"></ProgressBar>
+        
+        <!-- 
+        <ImageView 
+            android:id="@+id/title_loading"
+            style="@style/TitleBarButton"
+            android:src="@android:drawable/ic_popup_sync"
+            android:visibility="invisible" />
+        	
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarButton"
+            android:contentDescription="@string/description_search"
+            android:src="@drawable/ic_search" />
+        -->
+             
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarButton"
+            android:contentDescription="@string/new_note"
+            android:src="@drawable/ic_compose_new"
+            android:onClick="onNewNoteClick" />
+    </LinearLayout>
+    
+    <FrameLayout
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent">
+	    <ListView
+	        android:id="@android:id/list"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent" />
+	    <TextView
+	        android:id="@android:id/empty"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:text="@string/empty"
+	        android:gravity="center"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	</FrameLayout>
+</LinearLayout>

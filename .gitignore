@@ -1,0 +1,9 @@
+*.bzr
+.bzrignore
+.classpath
+default.properties
+.project
+*.iml
+default-properties
+gen
+bin

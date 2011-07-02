@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="syncServiceValues">
+        <item>none</item>
+        <item>Ubuntu One</item>
+        <item>200</item>
+        <item>500</item>
+        <item>1024</item>
+        <item>2048</item>
+        <item>5096</item>
+        <item>10240</item>
+        <item>20480</item>
+        <item>-1</item>
+    </string-array>
+    
+    <string-array name="syncServiceNames">
+        <item>None</item>
+        <item>Ubuntu One</item>
+    </string-array>
+    
+</resources>

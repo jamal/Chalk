@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout style="@style/TitleBar">
+        <TextView 
+        	style="@style/TitleBarText"
+        	android:id="@+id/note_edit_title" />
+        	
+        <ImageView style="@style/TitleBarSeparator" />
+        <Button
+        	style="@style/TitleBarButton"
+        	android:id="@+id/note_edit_done"
+        	android:text="@string/done"
+        	android:onClick="onSaveClick" />
+        	
+    </LinearLayout>
+    
+    <EditText 
+        android:gravity="top"
+        android:id="@+id/note_edit"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:capitalize="sentences"
+        android:scrollbars="vertical" />
+    
+</LinearLayout>

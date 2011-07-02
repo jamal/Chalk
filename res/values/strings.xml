@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chalk</string>
+    <string name="empty">No notes found</string>
+    
+    <string name="open">Open</string>
+    <string name="delete">Delete</string>
+    <string name="done">Done</string>
+    <string name="refresh">Refresh</string>
+    <string name="search_hint">Search</string>
+    
+    <string name="new_note">New Note</string>
+    <string name="edit_note">Edit Note</string>
+    
+    <string name="description_star">Star</string>
+    <string name="description_search">Search</string>
+    <string name="description_save">Save</string>
+    
+    <string name="settings.title">Settings</string>
+    <string name="settings.sync_title">Sync Settings</string>
+    <string name="settings.sync_service">Sync Service</string>
+    <string name="settings.authenticate">Authenticate</string>
+</resources>

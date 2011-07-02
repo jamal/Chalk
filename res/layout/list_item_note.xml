@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/list_item_note"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	style="@style/ListItem">
+	
+    <TextView
+        android:id="@+id/note_title"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        style="@style/NoteTitle" />
+	<TextView
+        android:id="@+id/note_body"
+        android:layout_below="@id/note_title"
+        android:layout_alignParentLeft="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dip"
+        android:singleLine="true"
+        style="@style/NoteBody" />
+	<TextView
+		android:id="@+id/note_date"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentTop="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingTop="6dip"
+		android:text="Apr 30"
+		style="@style/NoteDate" />
+		
+	<!-- 
+	<TextView
+		android:id="@+id/note_tag"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentBottom="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		style="@style/NoteTag.Blue"
+		android:text="Folder" />
+	-->
+</RelativeLayout>

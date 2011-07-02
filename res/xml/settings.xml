@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="@string/settings.title">
+	
+	<PreferenceCategory
+		android:title="@string/settings.sync_title">
+		
+		<ListPreference
+			android:title="@string/settings.sync_service"
+			android:key="syncService"
+			android:defaultValue="none"
+			android:entryValues="@array/syncServiceValues"
+			android:entries="@array/syncServiceNames" />
+			
+	</PreferenceCategory>
+
+</PreferenceScreen>
