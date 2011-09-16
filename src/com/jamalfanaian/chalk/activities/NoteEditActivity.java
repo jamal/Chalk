@@ -76,7 +76,6 @@ public class NoteEditActivity extends Activity {
 		// Register text change listener to update the title of the view
 		mNoteEdit.addTextChangedListener(new TextWatcher() {
 			
-			@Override
 			public void afterTextChanged(Editable s) {
 				mModified = true;
 				
@@ -102,12 +101,10 @@ public class NoteEditActivity extends Activity {
 				updateTitle(content.toString());
 			}
 
-			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 			}
 
-			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 			}

@@ -9,7 +9,7 @@
 			android:title="@string/settings.sync_service"
 			android:key="syncService"
 			android:defaultValue="none"
-			android:entryValues="@array/syncServiceValues"
+			android:entryValues="@array/syncServiceNames"
 			android:entries="@array/syncServiceNames" />
 			
 	</PreferenceCategory>

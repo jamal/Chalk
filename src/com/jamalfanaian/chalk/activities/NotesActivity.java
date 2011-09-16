@@ -49,8 +49,10 @@ public class NotesActivity extends ListActivity {
         setContentView(R.layout.activity_notes);
         
         mSyncActive = false;
+        mSyncService = null;
 
         mNotesDb = new NotesDbAdapter(this);
+        mNotesDb.open();
         loadNotes();
         
         registerForContextMenu(getListView());
@@ -60,12 +62,23 @@ public class NotesActivity extends ListActivity {
 
         Log.d(TAG, "Sync Service: " + syncService);
         
-        mSyncService = SyncServiceFactory.getSyncService(syncService, this);
+        try {
+        	mSyncService = SyncServiceFactory.getSyncService(syncService, this);
+        } catch (IllegalArgumentException e) {
+        	// Ignore this exception
+        }
         
         startSync();
     }
 
     @Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		mNotesDb.close();
+	}
+
+	@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         loadNotes();
@@ -73,8 +86,6 @@ public class NotesActivity extends ListActivity {
     
     private void loadNotes() {
     	Log.d(TAG, "Loading notes from DB");
-    	
-        mNotesDb.open();
         
     	Cursor cursor = mNotesDb.fetchAllNotes();
     	startManagingCursor(cursor);
@@ -82,8 +93,6 @@ public class NotesActivity extends ListActivity {
         NotesAdapter adapter = new NotesAdapter(this);
         adapter.changeCursor(cursor);
         setListAdapter(adapter);
-        
-        mNotesDb.close();
     }
 
     @Override
@@ -95,12 +104,13 @@ public class NotesActivity extends ListActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenuInfo menuInfo) {
-    	TextView note = (TextView) v.findViewById(R.id.note_title);
-    	menu.setHeaderTitle(note.getText());
+		super.onCreateContextMenu(menu, v, menuInfo);
+		
+//    	TextView note = (TextView) v.findViewById(R.id.note_title);
+//    	menu.setHeaderTitle(note.getText());
     	
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.context_item_note, menu);
-		super.onCreateContextMenu(menu, v, menuInfo);
     }
     
     @Override

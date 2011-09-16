@@ -18,6 +18,7 @@ public class NotesDbAdapter {
 	public static final String KEY_CONTENT = "content";
 	public static final String KEY_PINNED = "pinned";
 	public static final String KEY_MODIFIED = "modified";
+	public static final String KEY_DELETED = "deleted";
 	public static final String KEY_REMOTE_ID = "remote_id";
 	public static final String KEY_REMOTE_REV = "remote_rev";
 	public static final String KEY_DATE_REMOTE_UPDATE = "date_remote_update";
@@ -31,7 +32,7 @@ public class NotesDbAdapter {
 	
 	private static final String DATABASE_NAME = "data";
 	private static final String DATABASE_TABLE = "notes";
-	private static final int DATABASE_VERSION = 7;
+	private static final int DATABASE_VERSION = 8;
 	
 	private static final String DATABASE_CREATE = 
 		"CREATE TABLE " + DATABASE_TABLE + " (" +
@@ -40,6 +41,7 @@ public class NotesDbAdapter {
 			KEY_CONTENT + " TEXT NOT NULL," +
 			KEY_PINNED + " INTEGER DEFAULT 0," +
 			KEY_MODIFIED + " INTEGER DEFAULT 0," +
+			KEY_DELETED + " INTEGER DEFAULT 0," +
 			KEY_REMOTE_ID + " TEXT NULL," + 
 			KEY_REMOTE_REV + " INTEGER DEFAULT 0," + 
 			KEY_DATE_REMOTE_UPDATE + " INTEGER NULL," + 
@@ -90,6 +92,7 @@ public class NotesDbAdapter {
 		values.put(KEY_CONTENT, note.getContentHtml());
 		values.put(KEY_PINNED, note.getPinned());
 		values.put(KEY_MODIFIED, note.getModified());
+		values.put(KEY_DELETED, note.getDeleted());
 		values.put(KEY_REMOTE_ID, note.getRemoteId());
 		values.put(KEY_REMOTE_REV, note.getRemoteRev());
 		values.put(KEY_DATE_REMOTE_UPDATE, note.getDateRemoteUpdate());
@@ -147,7 +150,13 @@ public class NotesDbAdapter {
 	 * @return true if the note was successfully deleted, false otherwise
 	 */
     public boolean delete(long id) {
-        return mDb.delete(DATABASE_TABLE, KEY_ID + "=" + id, null) > 0;
+    	long timestamp = System.currentTimeMillis() / 1000L;
+		
+    	ContentValues values = new ContentValues();
+    	values.put(KEY_DELETED, 1);
+        values.put(KEY_DATE_UPDATE, timestamp);
+    	
+        return mDb.update(DATABASE_TABLE, values, KEY_ID + "=" + id, null) > 0;
     }
 	
 	/**
@@ -175,9 +184,9 @@ public class NotesDbAdapter {
 	public Cursor fetchAllNotes() {
 		return mDb.query(DATABASE_TABLE,  
 				new String[] {KEY_ID, KEY_TITLE, KEY_CONTENT, KEY_PINNED, 
-				KEY_MODIFIED, KEY_REMOTE_ID, KEY_REMOTE_REV, 
+				KEY_MODIFIED, KEY_DELETED, KEY_REMOTE_ID, KEY_REMOTE_REV, 
 				KEY_DATE_REMOTE_UPDATE, KEY_DATE_CREATE, KEY_DATE_UPDATE}, 
-				null, null, null, null, 
+				KEY_DELETED + " = 0", null, null, null, 
 				KEY_PINNED + " DESC, " + KEY_DATE_CREATE + " DESC");
 	}
 	
@@ -190,7 +199,7 @@ public class NotesDbAdapter {
 	public Cursor fetchNote(long id) {
 		Cursor cursor = mDb.query(DATABASE_TABLE,  
 				new String[] {KEY_ID, KEY_TITLE, KEY_CONTENT, KEY_PINNED, 
-				KEY_MODIFIED, KEY_REMOTE_ID, KEY_REMOTE_REV, 
+				KEY_MODIFIED, KEY_DELETED, KEY_REMOTE_ID, KEY_REMOTE_REV, 
 				KEY_DATE_REMOTE_UPDATE,  KEY_DATE_CREATE, KEY_DATE_UPDATE}, 
 				KEY_ID + " = " + id, null, null, null, null);
 		
@@ -204,7 +213,7 @@ public class NotesDbAdapter {
 	public Cursor fetchNoteByRemoteId(String remoteId) {
 		Cursor cursor = mDb.query(DATABASE_TABLE,  
 				new String[] {KEY_ID, KEY_TITLE, KEY_CONTENT, KEY_PINNED, 
-				KEY_MODIFIED, KEY_REMOTE_ID, KEY_REMOTE_REV, 
+				KEY_MODIFIED, KEY_DELETED, KEY_REMOTE_ID, KEY_REMOTE_REV, 
 				KEY_DATE_REMOTE_UPDATE, KEY_DATE_CREATE, KEY_DATE_UPDATE}, 
 				KEY_REMOTE_ID + " = '" + remoteId + "'", 
 				null, null, null, null);
@@ -219,9 +228,9 @@ public class NotesDbAdapter {
 	public Cursor fetchLocalNotes() {
 		Cursor cursor = mDb.query(DATABASE_TABLE,  
 				new String[] {KEY_ID, KEY_TITLE, KEY_CONTENT, KEY_PINNED, 
-				KEY_MODIFIED, KEY_REMOTE_ID, KEY_DATE_REMOTE_UPDATE, 
+				KEY_MODIFIED, KEY_DELETED, KEY_REMOTE_ID, KEY_DATE_REMOTE_UPDATE, 
 				KEY_DATE_CREATE, KEY_DATE_UPDATE}, 
-				KEY_REMOTE_ID + " IS NULL", 
+				KEY_REMOTE_ID + " IS NULL" + " AND " + KEY_DELETED + " = 0", 
 				null, null, null, null);
 		
 		return cursor;
@@ -230,9 +239,20 @@ public class NotesDbAdapter {
 	public Cursor fetchModifiedNotes() {
 		Cursor cursor = mDb.query(DATABASE_TABLE,  
 				new String[] {KEY_ID, KEY_TITLE, KEY_CONTENT, KEY_PINNED, 
-				KEY_MODIFIED, KEY_REMOTE_ID, KEY_REMOTE_REV, 
+				KEY_MODIFIED, KEY_DELETED, KEY_REMOTE_ID, KEY_REMOTE_REV, 
 				KEY_DATE_REMOTE_UPDATE, KEY_DATE_CREATE, KEY_DATE_UPDATE}, 
 				KEY_MODIFIED + " = 1", 
+				null, null, null, null);
+		
+		return cursor;
+	}
+	
+	public Cursor fetchDeletedNotes() {
+		Cursor cursor = mDb.query(DATABASE_TABLE,  
+				new String[] {KEY_ID, KEY_TITLE, KEY_CONTENT, KEY_PINNED, 
+				KEY_MODIFIED, KEY_DELETED, KEY_REMOTE_ID, KEY_REMOTE_REV, 
+				KEY_DATE_REMOTE_UPDATE, KEY_DATE_CREATE, KEY_DATE_UPDATE}, 
+				KEY_DELETED + " = 1", 
 				null, null, null, null);
 		
 		return cursor;

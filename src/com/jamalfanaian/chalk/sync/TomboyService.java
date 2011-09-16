@@ -83,11 +83,7 @@ public class TomboyService implements ISyncService {
 		String tokenSecret = prefs.getString(KEY_OAUTH_TOKEN_SECRET, null);
 		String tokenType = prefs.getString(KEY_OAUTH_TOKEN_TYPE, null);
 		
-		Log.d(TAG, "Starting tomsync");
-		
 		if (token != null && tokenSecret != null) {
-			Log.d(TAG, "Starting with token: " + token);
-			Log.d(TAG, "Starting with token secret: " + tokenSecret);
 			mConsumer.setTokenWithSecret(token, tokenSecret);
 			mTokenType = tokenType;
 		}
@@ -255,8 +251,6 @@ public class TomboyService implements ISyncService {
 					update = true;
 				}
 				
-				Log.d(TAG, "Using providers " + requestTokenUrl + " " + accessTokenUrl + " " + authorizeUrl);
-				
 				mProvider = new CommonsHttpOAuthProvider(requestTokenUrl,
 						accessTokenUrl, authorizeUrl);
 				mProvider.setOAuth10a(true);
@@ -318,8 +312,6 @@ public class TomboyService implements ISyncService {
 			try {
 				Log.d(TAG, "Retrieving access token");
 				
-				Log.d(TAG, "Using verifier " + verifier);
-				
 				getProvider().retrieveAccessToken(mConsumer, verifier);
 				mTokenType = "access";
 				
@@ -368,8 +360,12 @@ public class TomboyService implements ISyncService {
 		}
 	}
 	
-	// TODO: Return boolean for success
 	private void put(Note note, int revision) {
+		put(note, revision, null);
+	}
+
+	// TODO: Return boolean for success
+	private void put(Note note, int revision, String command) {
 		// TODO: Make a put that takes mulitple notes
 
 		String guid = note.getRemoteId();
@@ -383,6 +379,10 @@ public class TomboyService implements ISyncService {
 		try {
 			if (guid != null) {
 				jsonNote.put("guid", guid);
+			}
+			
+			if (command != null) {
+				jsonNote.put("command", command);
 			}
 			
 			Time time = new Time();
@@ -408,11 +408,17 @@ public class TomboyService implements ISyncService {
 
 	}
 	
+	// TODO: Return boolean for success
+	private void delete(Note note, int revision) {
+		put(note, revision, "delete");
+	}
+	
 	public void sync() throws SyncServiceInvalidResponseException {
 		int countCreated = 0;
 		int countUpdated = 0;
 		int countMerged = 0;
 		int countUploaded = 0;
+		int countDeleted = 0;
 		
         NotesDbAdapter notesDb = new NotesDbAdapter(mContext);
         notesDb.open();
@@ -500,6 +506,24 @@ public class TomboyService implements ISyncService {
 			int revision = jsonResponse.getInt("latest-sync-revision");
 			int nextRevision = revision + 1;
 			
+			// Delete notes
+			Cursor deletedNotes = notesDb.fetchDeletedNotes();
+			Log.d(TAG, "Uploading " + Integer.toString(deletedNotes.getCount()) + " deleted notes");
+			if (deletedNotes.getCount() > 0) {
+				deletedNotes.moveToFirst();
+				
+				while (!deletedNotes.isAfterLast()) {
+					Note note = new Note(deletedNotes);
+					
+					delete(note, nextRevision);
+					
+					countDeleted++;
+					
+					deletedNotes.moveToNext();
+				}
+			}
+			deletedNotes.close();
+			
 			// Upload modified notes (if any)
 			Cursor modifiedNotes = notesDb.fetchModifiedNotes();
 			Log.d(TAG, "Uploading " + Integer.toString(modifiedNotes.getCount()) + " modified notes");
@@ -526,7 +550,7 @@ public class TomboyService implements ISyncService {
 			
 			Log.d(TAG, "Created " + countCreated + ", updated " + countUpdated + 
 					   ", merged " + countMerged + ", and uploaded " + 
-					   countUploaded);
+					   countUploaded + ", and deleted " + countDeleted);
 			
 		} catch (JSONException e) {
 			throw new SyncServiceInvalidResponseException(response);

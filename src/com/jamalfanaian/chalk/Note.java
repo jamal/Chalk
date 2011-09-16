@@ -13,6 +13,7 @@ public class Note {
 	private String mContent;
 	private boolean mPinned;
 	private boolean mModified;
+	private boolean mDeleted;
 	private String mRemoteId;
 	private Integer mRemoteRev;
 	private Long mDateRemoteUpdate;
@@ -25,6 +26,7 @@ public class Note {
 		mContent = null;
 		mPinned = false;
 		mModified = false;
+		mDeleted = false;
 		mRemoteId = null;
 		mRemoteRev = null;
 		mDateRemoteUpdate = null;
@@ -38,6 +40,7 @@ public class Note {
 		mContent = cursor.getString(cursor.getColumnIndex(NotesDbAdapter.KEY_CONTENT));
 		mPinned = cursor.getInt(cursor.getColumnIndex(NotesDbAdapter.KEY_PINNED)) != 0;
 		mModified = cursor.getInt(cursor.getColumnIndex(NotesDbAdapter.KEY_MODIFIED)) != 0;
+		mDeleted = cursor.getInt(cursor.getColumnIndex(NotesDbAdapter.KEY_DELETED)) != 0;
 		mRemoteId = cursor.getString(cursor.getColumnIndex(NotesDbAdapter.KEY_REMOTE_ID));
 		mRemoteRev = cursor.getInt(cursor.getColumnIndex(NotesDbAdapter.KEY_REMOTE_REV));
 		mDateRemoteUpdate = cursor.getLong(cursor.getColumnIndex(NotesDbAdapter.KEY_DATE_REMOTE_UPDATE));
@@ -91,6 +94,10 @@ public class Note {
 		mModified = modified;
 	}
 	
+	public void setDeleted(boolean deleted) {
+		mDeleted = deleted;
+	}
+	
 	public void setRemoteId(String remoteId) {
 		mRemoteId = remoteId;
 	}
@@ -129,6 +136,10 @@ public class Note {
 	
 	public boolean getModified() {
 		return mModified;
+	}
+	
+	public boolean getDeleted() {
+		return mDeleted;
 	}
 	
 	public String getRemoteId() {
