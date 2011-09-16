@@ -144,6 +144,11 @@ public class NotesActivity extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main_activity, menu);
+        
+        if (mSyncService == null || !mSyncService.isAuthenticated()) {
+        	menu.findItem(R.id.refresh).setEnabled(false);
+        }
+
         return true;
     }
     
