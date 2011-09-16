@@ -4,8 +4,8 @@
     <string-array name="syncServiceNames">
         <item>None</item>
         <item>Ubuntu One</item>
-        <item>Google Docs</item>
-        <item>SimpleNotes</item>
+        <!-- <item>Google Docs</item>
+        <item>SimpleNotes</item> -->
     </string-array>
     
 </resources>
