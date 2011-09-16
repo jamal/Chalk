@@ -119,11 +119,7 @@ public class NotesActivity extends ListActivity {
         
     	switch (item.getItemId()) {
     	case R.id.delete:
-    		
-    		mNotesDb.open();
     		mNotesDb.delete(info.id);
-    		mNotesDb.close();
-    		
     		loadNotes();
     		return true;
     	}

@@ -315,8 +315,6 @@ public class TomboyService implements ISyncService {
 				getProvider().retrieveAccessToken(mConsumer, verifier);
 				mTokenType = "access";
 				
-				Log.d(TAG, "Received access token: " + mConsumer.getToken() + ", secret: " + mConsumer.getTokenSecret());
-				
 				savePrefs();
 				return true;
 				
@@ -349,7 +347,6 @@ public class TomboyService implements ISyncService {
 		
 		if (mProvider != null && mConsumer != null) {
 			SharedPreferences.Editor editor = getPrefs().edit();
-			Log.d(TAG, "Saving token: " + mConsumer.getToken());
 			editor.putString(KEY_OAUTH_TOKEN_TYPE, mTokenType);
 			editor.putString(KEY_OAUTH_TOKEN, mConsumer.getToken());
 			editor.putString(KEY_OAUTH_TOKEN_SECRET, mConsumer.getTokenSecret());

@@ -32,7 +32,7 @@ public class NotesDbAdapter {
 	
 	private static final String DATABASE_NAME = "data";
 	private static final String DATABASE_TABLE = "notes";
-	private static final int DATABASE_VERSION = 8;
+	private static final int DATABASE_VERSION = 8;	// Public release at version 7
 	
 	private static final String DATABASE_CREATE = 
 		"CREATE TABLE " + DATABASE_TABLE + " (" +
@@ -62,8 +62,10 @@ public class NotesDbAdapter {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
-			onCreate(db);
+			// Upgrade 7 -> 8
+			if (oldVersion <= 7 && newVersion == 8) {
+				db.execSQL("ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN " + KEY_DELETED + " INTEGER DEFAULT 0");		
+			}
 		}
 		
 	}
